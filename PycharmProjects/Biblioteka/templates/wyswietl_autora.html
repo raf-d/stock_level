@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block sikorka %}
+    <ul>
+        {% for author in authors %}
+            <li>
+            {% for data in author %}
+                {{data}}
+            {% endfor %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

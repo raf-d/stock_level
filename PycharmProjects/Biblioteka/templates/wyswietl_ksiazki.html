@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block sikorka %}
+    <ul>
+        {% for book in books %}
+            <li>
+            {% for data in book %}
+                {{data}}
+            {% endfor %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
