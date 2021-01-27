@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Materiały wyjściowe:</h2>
+    <ul>
+        {% for comp in components %}
+            <li><a href='/component/{{ comp.id }}'>{{ comp.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

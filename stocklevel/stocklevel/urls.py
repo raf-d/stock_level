@@ -15,10 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from stocklevel_app.views import BaseView, ComponentCreateView
+from stocklevel_app.views import BaseView, ComponentCreateView, ProductCreateView,\
+    RecipientCreateView, SupplierCreateView, ComponentsView, ComponentView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', BaseView.as_view()),
-    path('add-component/', ComponentCreateView.as_view())
+    path('add-component/', ComponentCreateView.as_view()),
+    path('add-product/', ProductCreateView.as_view()),
+    path('add-recipient/', RecipientCreateView.as_view()),
+    path('add-supplier/', SupplierCreateView.as_view()),
+    path('components/', ComponentsView.as_view()),
+    path('component/<int:component_id>/', ComponentView.as_view()),
 ]

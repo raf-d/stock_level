@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Component(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Nazwa substancji')
+    name = models.CharField(max_length=100, verbose_name='Nazwa materiału wyjściowego')
     measure = models.CharField(max_length=8, choices=(('kg', 'kg'), ('l', 'l')), verbose_name='Jednostka miary')
 
     def __str__(self):
@@ -18,8 +18,8 @@ class Recipient(models.Model):
 
 class Supplier(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nazwa dostawcy')
-    comment = models.TextField(verbose_name='Uwagi')
-    component = models.ManyToManyField(Component, verbose_name='Substancja dostarczana przez dostawcę')
+    comment = models.TextField(null=True, verbose_name='Uwagi')
+    component = models.ManyToManyField(Component, verbose_name='Materiał wyjściowy dostarczany przez dostawcę')
 
     def __str__(self):
         return self.name
