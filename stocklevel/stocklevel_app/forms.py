@@ -26,14 +26,24 @@ class ProductForm(forms.ModelForm):
         fields = '__all__'
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class WarehouseEntryForm(forms.ModelForm):
     class Meta:
         model = WarehouseEntry
-        exclude = ['delivery_date']
+        exclude = ['delivery_date', 'laboratory_series_number']
+        widgets = {
+            'use_by_date': DateInput(attrs={'type': 'date'})
+        }
 
 
 class WarehouseReleaseForm(forms.ModelForm):
     class Meta:
         model = WarehouseRelease
         fields = '__all__'  # zmienić jeżeli data ma wypełniać się automatycznie
+
+        def update_stock_value(self):
+            pass
 

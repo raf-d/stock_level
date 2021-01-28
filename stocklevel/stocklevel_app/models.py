@@ -4,9 +4,10 @@ from django.db import models
 class Component(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nazwa materiału wyjściowego')
     measure = models.CharField(max_length=8, choices=(('kg', 'kg'), ('l', 'l')), verbose_name='Jednostka miary')
+    stock_level = models.FloatField(null=True, default=0)  # dodano
 
     def __str__(self):
-        return self.name
+        return (f'{self.name} ({self.measure})')
 
 
 class Recipient(models.Model):
@@ -36,16 +37,17 @@ class Product(models.Model):
 
 
 class WarehouseEntry(models.Model):
-    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE, verbose_name='Nazwa materiału wyjściowego')
     amount = models.FloatField(verbose_name='Ilość')
     # measure = models.CharField(choices=(('kg', 'kg'), ('l', 'l')))  powiązać z Component
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, verbose_name='Dostawca materiału')
     supplier_series_number = models.CharField(max_length=100, verbose_name='Numer serii producenta')
     delivery_date = models.DateField(auto_now_add=True)
     # czy data ma się sama uzupełniać?
     warehouse_series_number = models.CharField(max_length=100, verbose_name='Numer magazynowy')
-    laboratory_series_number = models.CharField(max_length=100, null=True, verbose_name='Numer serii po badaniu')
-    use_by_date = models.DateField('Termin przydatności')
+    laboratory_series_number = models.CharField(max_length=100, null=True, verbose_name='Numer serii po badaniu',
+                                                help_text='Pole do uzupełnienia po wykonaniu badań wewnętrznych')
+    use_by_date = models.DateField(verbose_name='Termin przydatności')
 
     def __str__(self):
         return self.warehouse_series_number

@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from stocklevel_app.views import BaseView, ComponentCreateView, ProductCreateView,\
-    RecipientCreateView, SupplierCreateView, ComponentsView, ComponentView
+    RecipientCreateView, SupplierCreateView, ComponentsView, ComponentView, SuppliersView,\
+    SupplierView, WarehouseEntryView, WarehouseReleaseFormView, StockLevelView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,10 @@ urlpatterns = [
     path('add-supplier/', SupplierCreateView.as_view()),
     path('components/', ComponentsView.as_view()),
     path('component/<int:component_id>/', ComponentView.as_view()),
+    path('suppliers/', SuppliersView.as_view()),
+    path('supplier/<int:supplier_id>/', SupplierView.as_view()),
+    path('add-warehouse-entry/', WarehouseEntryView.as_view()),
+    path('add-warehouse-release/', WarehouseReleaseFormView.as_view()),
+    path('stock-level/', StockLevelView.as_view()),
+
 ]

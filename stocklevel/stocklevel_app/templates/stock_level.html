@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Aktualny stan magazynowy materiałów wyjściowych:</h2>
+    <ul>
+        {% for component in components %}
+            <li>{{ component.name }}: {{ component.stock_level }} {{ component.measure }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -11,7 +11,6 @@ from .models import Component, Supplier, Product, Recipient, WarehouseEntry, War
 from .forms import ComponentForm, ProductForm, SupplierForm, RecipientForm, WarehouseEntryForm, WarehouseReleaseForm
 
 
-# Create your views here.
 class BaseView(View):
     def get(self, request):
         return render(request, 'base.html')
@@ -19,7 +18,7 @@ class BaseView(View):
 
 class ComponentCreateView(CreateView):
     model = Component
-    fields = '__all__'
+    fields = ['name', 'measure']
     success_url = '/'
 
 
@@ -53,11 +52,69 @@ class ComponentView(View):
         return render(request, 'component.html', {'component': component})
 
 
+class SuppliersView(View):
+    def get(self, request):
+        suppliers = Supplier.objects.all()
+        return render(request, 'suppliers.html', {'suppliers': suppliers})
 
-# class ComponentCreateView(View):
-#     def get(self, request):
-#         form = ComponentForm()
-#         return render(request, 'component_form.html', {'form': form})
+
+class SupplierView(View):
+    def get(self, request, supplier_id):
+        supplier = Supplier.objects.get(id=supplier_id)
+        components = supplier.component.all()
+        return render(request, 'supplier.html', {'supplier': supplier, 'components': components})
+
+
+class WarehouseEntryView(View):
+    def get(self, request):
+        form = WarehouseEntryForm()
+        return render(request, 'warehouse_entry.html', {'form': form})
+
+    def post(self, request):
+        form = WarehouseEntryForm(request.POST)
+        if form.is_valid():
+            warehouse_entry = form.save()
+            print(request.POST['component'])
+            component = Component.objects.get(id=request.POST['component'])
+            component.stock_level += int(request.POST['amount'])
+            print(component.stock_level)
+            new_comp = component.save()
+            return redirect('/')
+        else:
+            return render(request, 'warehouse_entry.html', {'form': form})
+
+
+class WarehouseReleaseFormView(FormView):  # do uzupełnienia
+    def get(self, request):
+        form = WarehouseReleaseForm()
+        return render(request, 'warehouse_release.html', {'form': form})
+
+    def post(self, request):
+        form = WarehouseReleaseForm(request.POST)
+        if form.is_valid():
+            warehouse_release = form.save()
+            component = Component.objects.get(id=request.POST['component'])
+            component.stock_level -= int(request.POST['amount'])
+            new_comp = component.save()
+            return redirect('/')
+        else:
+            return render(request, 'warehouse_release.html', {'form': form})
+
+
+#  jak to działa?
+# class WarehouseReleaseFormView(FormView):  # do uzupełnienia
+#     template_name = 'warehouse_release.html'
+#     form_class = WarehouseReleaseForm
+#     success_url = '/'
 #
-#     def post(self, request):
-#         pass
+#     def form_valid(self, request):
+#         component = Component.objects.get(id=request.POST['component'])
+#         component.stock_level -= int(request.POST['amount'])
+#         new_comp = component.save()
+#         return super(WarehouseReleaseFormView, self).form_valid(form)
+
+
+class StockLevelView(View):
+    def get(self, request):
+        components = Component.objects.all()
+        return render(request, 'stock_level.html', {'components': components})
