@@ -1,5 +1,6 @@
 import django.forms as forms
-from .models import Component, Recipient, Supplier, Product, WarehouseEntry, WarehouseRelease
+from .models import Component, Recipient, Supplier, Product, WarehouseFlows\
+    # WarehouseEntry, WarehouseRelease
 
 
 class ComponentForm(forms.ModelForm):
@@ -18,6 +19,10 @@ class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
         fields = '__all__'
+        widgets = {
+            'component': forms.CheckboxSelectMultiple()
+        }
+        # nie działa
 
 
 class ProductForm(forms.ModelForm):
@@ -32,18 +37,39 @@ class DateInput(forms.DateInput):
 
 class WarehouseEntryForm(forms.ModelForm):
     class Meta:
-        model = WarehouseEntry
-        exclude = ['delivery_date', 'laboratory_series_number']
+        model = WarehouseFlows
+        exclude = ['laboratory_series_number', 'laboratory_series_date', 'release_date',
+                   'release_purpose', 'release_amount']
         widgets = {
-            'use_by_date': DateInput(attrs={'type': 'date'})
+            'use_by_date': DateInput(attrs={'type': 'date'}),
+            'delivery_date': DateInput(attrs={'type': 'date'})
         }
 
 
 class WarehouseReleaseForm(forms.ModelForm):
     class Meta:
-        model = WarehouseRelease
-        fields = '__all__'  # zmienić jeżeli data ma wypełniać się automatycznie
+        model = WarehouseFlows
+        fields = ['component', 'series_amount', 'release_date', 'release_purpose', 'release_amount']
+        widgets = {
+            'release_date': DateInput(attrs={'type': 'date'}),
+            'component': forms.HiddenInput,
+            'series_amount': forms.HiddenInput
+        }
 
-        def update_stock_value(self):
-            pass
+    # dodane do weryfikacji ilości materiału
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        series_amount = cleaned_data['series_amount']
+        release_amount = cleaned_data['release_amount']
 
+        if release_amount > series_amount:
+            raise forms.ValidationError('Nie ma tyle materiału na stanie')
+
+
+class WarehouseEntryLaboratoryForm(forms.ModelForm):
+    class Meta:
+        model = WarehouseFlows
+        fields = ['laboratory_series_number', 'laboratory_series_date']
+        widgets = {
+            'laboratory_series_date': DateInput(attrs={'type': 'date'}),
+        }

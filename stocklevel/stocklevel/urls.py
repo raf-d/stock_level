@@ -17,7 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from stocklevel_app.views import BaseView, ComponentCreateView, ProductCreateView,\
     RecipientCreateView, SupplierCreateView, ComponentsView, ComponentView, SuppliersView,\
-    SupplierView, WarehouseEntryView, WarehouseReleaseFormView, StockLevelView
+    SupplierView, WarehouseEntryCreate, WarehouseReleaseView, StockLevelView, SupplierUpdate,\
+    AddLaboratoryNumberView, AllEntriesView
+
+    # WarehouseEntriesView, WarehouseEntryView, AddLaboratoryNumber, WarehouseReleaseFormView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,12 +29,16 @@ urlpatterns = [
     path('add-product/', ProductCreateView.as_view()),
     path('add-recipient/', RecipientCreateView.as_view()),
     path('add-supplier/', SupplierCreateView.as_view()),
+    path('update-supplier/<int:pk>/', SupplierUpdate.as_view()),
     path('components/', ComponentsView.as_view()),
     path('component/<int:component_id>/', ComponentView.as_view()),
     path('suppliers/', SuppliersView.as_view()),
     path('supplier/<int:supplier_id>/', SupplierView.as_view()),
-    path('add-warehouse-entry/', WarehouseEntryView.as_view()),
-    path('add-warehouse-release/', WarehouseReleaseFormView.as_view()),
+    path('add-warehouse-entry/', WarehouseEntryCreate.as_view()),
+    # path('warehouse-entries/', WarehouseEntriesView.as_view()),
+    path('add-laboratory-number/<int:pk>/', AddLaboratoryNumberView.as_view()),
+    path('all-entries-view/', AllEntriesView.as_view()),
+    path('add-warehouse-release/<int:pk>/', WarehouseReleaseView.as_view()),
     path('stock-level/', StockLevelView.as_view()),
 
 ]

@@ -7,8 +7,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
-from .models import Component, Supplier, Product, Recipient, WarehouseEntry, WarehouseRelease
-from .forms import ComponentForm, ProductForm, SupplierForm, RecipientForm, WarehouseEntryForm, WarehouseReleaseForm
+from .models import Component, Supplier, Product, Recipient, WarehouseFlows
+
+from .forms import ComponentForm, ProductForm, SupplierForm, RecipientForm, WarehouseEntryForm,\
+    WarehouseReleaseForm, WarehouseEntryLaboratoryForm
 
 
 class BaseView(View):
@@ -19,7 +21,7 @@ class BaseView(View):
 class ComponentCreateView(CreateView):
     model = Component
     fields = ['name', 'measure']
-    success_url = '/'
+    success_url = '/components/'
 
 
 class ProductCreateView(CreateView):
@@ -37,7 +39,7 @@ class RecipientCreateView(CreateView):
 class SupplierCreateView(CreateView):
     model = Supplier
     fields = '__all__'
-    success_url = '/'
+    success_url = '/suppliers/'
 
 
 class ComponentsView(View):
@@ -65,56 +67,57 @@ class SupplierView(View):
         return render(request, 'supplier.html', {'supplier': supplier, 'components': components})
 
 
-class WarehouseEntryView(View):
+# nowa rzecz 01.02.2021
+class WarehouseEntryCreate(CreateView):
+    form_class = WarehouseEntryForm
+    model = WarehouseFlows
+    success_url = '/stock-level/'
+
+    def form_valid(self, form):
+        new_entry = form.save()
+        component = form.cleaned_data['component']
+        component.stock_level += int(form.cleaned_data['series_amount'])
+        new_comp = component.save()
+        return redirect('/stock-level/')
+
+
+# działa z walidacją w forms.py
+class WarehouseReleaseView(UpdateView):
+    form_class = WarehouseReleaseForm
+    model = WarehouseFlows
+    template_name_suffix = '_update_form'
+
+    def form_valid(self, form):
+        component = form.cleaned_data['component']
+        component.stock_level -= int(form.cleaned_data['release_amount'])
+        new_component = component.save()
+        new_release = form.save()
+        new_release.series_amount -= int(form.cleaned_data['release_amount'])
+        new_release.save()
+        return redirect('/stock-level/')
+
+
+class AddLaboratoryNumberView(UpdateView):
+    model = WarehouseFlows
+    form_class = WarehouseEntryLaboratoryForm
+    template_name_suffix = '_update_form'
+    success_url = '/stock-level/'
+
+
+class AllEntriesView(View):
     def get(self, request):
-        form = WarehouseEntryForm()
-        return render(request, 'warehouse_entry.html', {'form': form})
-
-    def post(self, request):
-        form = WarehouseEntryForm(request.POST)
-        if form.is_valid():
-            warehouse_entry = form.save()
-            print(request.POST['component'])
-            component = Component.objects.get(id=request.POST['component'])
-            component.stock_level += int(request.POST['amount'])
-            print(component.stock_level)
-            new_comp = component.save()
-            return redirect('/')
-        else:
-            return render(request, 'warehouse_entry.html', {'form': form})
-
-
-class WarehouseReleaseFormView(FormView):  # do uzupełnienia
-    def get(self, request):
-        form = WarehouseReleaseForm()
-        return render(request, 'warehouse_release.html', {'form': form})
-
-    def post(self, request):
-        form = WarehouseReleaseForm(request.POST)
-        if form.is_valid():
-            warehouse_release = form.save()
-            component = Component.objects.get(id=request.POST['component'])
-            component.stock_level -= int(request.POST['amount'])
-            new_comp = component.save()
-            return redirect('/')
-        else:
-            return render(request, 'warehouse_release.html', {'form': form})
-
-
-#  jak to działa?
-# class WarehouseReleaseFormView(FormView):  # do uzupełnienia
-#     template_name = 'warehouse_release.html'
-#     form_class = WarehouseReleaseForm
-#     success_url = '/'
-#
-#     def form_valid(self, request):
-#         component = Component.objects.get(id=request.POST['component'])
-#         component.stock_level -= int(request.POST['amount'])
-#         new_comp = component.save()
-#         return super(WarehouseReleaseFormView, self).form_valid(form)
+        entries = WarehouseFlows.objects.all().order_by('delivery_date')
+        return render(request, 'all_entries.html', {'entries': entries})
 
 
 class StockLevelView(View):
     def get(self, request):
-        components = Component.objects.all()
+        components = Component.objects.all().order_by('name')
         return render(request, 'stock_level.html', {'components': components})
+
+
+class SupplierUpdate(UpdateView):
+    model = Supplier
+    fields = ['comment', 'category']
+    template_name_suffix = '_update_form'
+    success_url = '/suppliers/'
