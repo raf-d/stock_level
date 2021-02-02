@@ -1,6 +1,5 @@
 import django.forms as forms
-from .models import Component, Recipient, Supplier, Product, WarehouseFlows\
-    # WarehouseEntry, WarehouseRelease
+from .models import Component, Recipient, Supplier, Product, WarehouseFlows
 
 
 class ComponentForm(forms.ModelForm):
@@ -73,3 +72,8 @@ class WarehouseEntryLaboratoryForm(forms.ModelForm):
         widgets = {
             'laboratory_series_date': DateInput(attrs={'type': 'date'}),
         }
+
+
+class LoginForm(forms.Form):
+    login = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)

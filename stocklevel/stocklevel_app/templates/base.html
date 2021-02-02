@@ -4,6 +4,13 @@
             <meta charset="utf-8">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
         </head>
+        <header>
+            {% if user.is_authenticated %}
+            <div>Użytkownik: {{ user.username }},  <a href="/logout/">Wyloguj</a></div>
+            {% else %}
+            <a href="/login/">Zaloguj</a>
+            {% endif %}
+        </header>
         <body style="background-color: {{ color }}">
             <h1>Gospodarka magazynowa</h1>
             {% block content %}{% endblock %}
@@ -27,6 +34,6 @@
             </ul>
 
 
-            <footer>Witaj</footer>
+            <footer></footer>
         </body>
     </html>
