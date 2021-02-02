@@ -110,6 +110,12 @@ class AllEntriesView(View):
         return render(request, 'all_entries.html', {'entries': entries})
 
 
+class EntryDetailedView(View):
+    def get(self, request, entry_id):
+        entry = WarehouseFlows.objects.get(id=entry_id)
+        return render(request, 'detailed_entry.html', {'entry': entry})
+
+
 class StockLevelView(View):
     def get(self, request):
         components = Component.objects.all().order_by('name')

@@ -5,12 +5,9 @@
     <table>
         <thead>
             <tr>
+                <th>Nr magazynowy</th>
                 <th>Nazwa materiału</th>
                 <th>Data dostawy</th>
-                <th>Nr serii producenta</th>
-                <th>Nr magazynowy</th>
-                <th>Data badań lab.</th>
-                <th>Nr po badaniach lab.</th>
                 <th>Aktualnie na stanie</th>
                 <th>Jednostka</th>
                 <th>Termin przydatności</th>
@@ -19,12 +16,9 @@
         <tbody>
             {% for entry in entries %}
             <tr>
+                <td><a href="/entry-detailed-view/{{ entry.id }}/">{{ entry.warehouse_series_number }}</a></td>
                 <td>{{ entry.component }}</td>
                 <td>{{ entry.delivery_date }}</td>
-                <td>{{ entry.supplier_series_number }}</td>
-                <td>{{ entry.warehouse_series_number }}</td>
-                <td>{{ entry.laboratory_series_date }}</td>
-                <td>{{ entry.laboratory_series_number }}</td>
                 <td>{{ entry.series_amount }}</td>
                 <td>{{ entry.component.measure }}</td>
                 <td>{{ entry.use_by_date }}</td>

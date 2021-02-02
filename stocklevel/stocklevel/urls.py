@@ -18,9 +18,8 @@ from django.urls import path
 from stocklevel_app.views import BaseView, ComponentCreateView, ProductCreateView,\
     RecipientCreateView, SupplierCreateView, ComponentsView, ComponentView, SuppliersView,\
     SupplierView, WarehouseEntryCreate, WarehouseReleaseView, StockLevelView, SupplierUpdate,\
-    AddLaboratoryNumberView, AllEntriesView
+    AddLaboratoryNumberView, AllEntriesView, EntryDetailedView
 
-    # WarehouseEntriesView, WarehouseEntryView, AddLaboratoryNumber, WarehouseReleaseFormView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +34,7 @@ urlpatterns = [
     path('suppliers/', SuppliersView.as_view()),
     path('supplier/<int:supplier_id>/', SupplierView.as_view()),
     path('add-warehouse-entry/', WarehouseEntryCreate.as_view()),
-    # path('warehouse-entries/', WarehouseEntriesView.as_view()),
+    path('entry-detailed-view/<int:entry_id>/', EntryDetailedView.as_view()),
     path('add-laboratory-number/<int:pk>/', AddLaboratoryNumberView.as_view()),
     path('all-entries-view/', AllEntriesView.as_view()),
     path('add-warehouse-release/<int:pk>/', WarehouseReleaseView.as_view()),
