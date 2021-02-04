@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
 from .models import Component, Supplier, Product, Recipient, WarehouseFlows
-
 from .forms import ComponentForm, ProductForm, SupplierForm, RecipientForm, WarehouseEntryForm,\
     WarehouseReleaseForm, WarehouseEntryLaboratoryForm, LoginForm
 
@@ -21,43 +20,47 @@ class BaseView(View):
         return render(request, 'base.html')
 
 
-class ComponentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class ComponentCreateView(PermissionRequiredMixin, CreateView):
 
     """view with a form to create new component"""
 
+    permission_required = ('stocklevel_app.add_component')
     model = Component
     fields = ['name', 'measure']
     success_url = '/components/'
 
 
-class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
 
     """view with a form to create new product"""
 
+    permission_required = ('stocklevel_app.add_product')
     model = Product
     fields = '__all__'
     success_url = '/'
 
 
-class RecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class RecipientCreateView(PermissionRequiredMixin, CreateView):
 
     """view with a form to create new recipient"""
 
+    permission_required = ('stocklevel_app.add_recipient')
     model = Recipient
     fields = '__all__'
     success_url = '/'
 
 
-class SupplierCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class SupplierCreateView(PermissionRequiredMixin, CreateView):
 
     """view with a form to create new supplier"""
 
+    permission_required = ('stocklevel_app.add_supplier')
     model = Supplier
     fields = '__all__'
     success_url = '/suppliers/'
 
 
-class ComponentsView(View):
+class ComponentsView(LoginRequiredMixin, View):
 
     """view to show list of all components"""
 
@@ -66,7 +69,7 @@ class ComponentsView(View):
         return render(request, 'components.html', {'components': components})
 
 
-class ComponentView(View):
+class ComponentView(LoginRequiredMixin, View):
 
     """view to show details of chosen component"""
 
@@ -75,7 +78,7 @@ class ComponentView(View):
         return render(request, 'component.html', {'component': component})
 
 
-class SuppliersView(View):
+class SuppliersView(LoginRequiredMixin, View):
 
     """view to show list of all suppliers"""
 
@@ -84,7 +87,7 @@ class SuppliersView(View):
         return render(request, 'suppliers.html', {'suppliers': suppliers})
 
 
-class SupplierView(View):
+class SupplierView(LoginRequiredMixin, View):
 
     """view to show details of chosen supplier"""
 
@@ -94,10 +97,20 @@ class SupplierView(View):
         return render(request, 'supplier.html', {'supplier': supplier, 'components': components})
 
 
-class WarehouseEntryCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class ProductsView(LoginRequiredMixin, View):
+
+    """view to show list of all products"""
+
+    def get(self, request):
+        products = Product.objects.all()
+        return render(request, 'products.html', {'products': products})
+
+
+class WarehouseEntryCreate(PermissionRequiredMixin, CreateView):
 
     """view to enter a new delivery of component do warehouse"""
 
+    permission_required = ('stocklevel_app.add_warehouseflows')
     form_class = WarehouseEntryForm
     model = WarehouseFlows
     success_url = '/stock-level/'
@@ -110,11 +123,11 @@ class WarehouseEntryCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
         return redirect('/stock-level/')
 
 
-# działa z walidacją w forms.py
-class WarehouseReleaseView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class WarehouseReleaseView(PermissionRequiredMixin, UpdateView):
 
     """View to release component from warehouse to the laboratory, production or removal"""
 
+    permission_required = ('stocklevel_app.change_warehouseflows')
     form_class = WarehouseReleaseForm
     model = WarehouseFlows
     template_name_suffix = '_update_form'
@@ -129,17 +142,18 @@ class WarehouseReleaseView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         return redirect('/stock-level/')
 
 
-class AddLaboratoryNumberView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class AddLaboratoryNumberView(PermissionRequiredMixin, UpdateView):
 
     """View to add laboratory number after internal laboratory investigation"""
 
+    permission_required = ('stocklevel_app.change_warehouseflows')
     model = WarehouseFlows
     form_class = WarehouseEntryLaboratoryForm
     template_name_suffix = '_update_form'
     success_url = '/stock-level/'
 
 
-class AllEntriesView(View):
+class AllEntriesView(LoginRequiredMixin, View):
 
     """View to show list of all entries to the warehouse"""
 
@@ -148,7 +162,7 @@ class AllEntriesView(View):
         return render(request, 'all_entries.html', {'entries': entries})
 
 
-class EntryDetailedView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class EntryDetailedView(LoginRequiredMixin, View):
 
     """View to show details of chosen entry to the warehouse"""
 
@@ -166,10 +180,11 @@ class StockLevelView(View):
         return render(request, 'stock_level.html', {'components': components})
 
 
-class SupplierUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class SupplierUpdate(PermissionRequiredMixin, UpdateView):
 
     """View to update information about chosen supplier"""
 
+    permission_required = ('stocklevel_app.change_supplier')
     model = Supplier
     fields = ['comment', 'category']
     template_name_suffix = '_update_form'
