@@ -39,7 +39,6 @@ class Product(models.Model):
         return self.name
 
 
-# upgrade modelu
 class WarehouseFlows(models.Model):
     component = models.ForeignKey(Component, on_delete=models.CASCADE, verbose_name='Nazwa materiału wyjściowego')
     series_amount = models.FloatField(verbose_name='Ilość')

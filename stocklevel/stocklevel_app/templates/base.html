@@ -8,10 +8,10 @@
             {% if user.is_authenticated %}
             <div>Użytkownik: {{ user.username }},  <a href="/logout/">Wyloguj</a></div>
             {% else %}
-            <a href="/login/">Zaloguj</a>
+            Nie jesteś zalogowany,<a href="/login/"> Zaloguj</a>
             {% endif %}
         </header>
-        <body style="background-color: {{ color }}">
+        <body>
             <h1>Gospodarka magazynowa</h1>
             {% block content %}{% endblock %}
         <br><br>
@@ -38,6 +38,6 @@
             </ul>
 
 
-            <footer></footer>
+            <footer>author: raf</footer>
         </body>
     </html>
