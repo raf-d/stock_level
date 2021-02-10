@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
 from .models import Component, Supplier, Product, Recipient, WarehouseFlows
-from .forms import WarehouseEntryForm, WarehouseReleaseForm, WarehouseEntryLaboratoryForm, LoginForm
+from .forms import WarehouseEntryForm, WarehouseReleaseForm, WarehouseEntryLaboratoryForm, LoginForm, ProductForm
 
 
 class BaseView(View):
@@ -32,8 +32,8 @@ class ProductCreateView(PermissionRequiredMixin, CreateView):
 
     permission_required = ('stocklevel_app.add_product')
     model = Product
-    fields = '__all__'
-    success_url = '/'
+    form_class = ProductForm
+    success_url = '/products/'
 
 
 class RecipientCreateView(PermissionRequiredMixin, CreateView):
@@ -43,7 +43,7 @@ class RecipientCreateView(PermissionRequiredMixin, CreateView):
     permission_required = ('stocklevel_app.add_recipient')
     model = Recipient
     fields = '__all__'
-    success_url = '/'
+    success_url = '/recipients/'
 
 
 class SupplierCreateView(PermissionRequiredMixin, CreateView):
@@ -100,6 +100,24 @@ class ProductsView(LoginRequiredMixin, View):
     def get(self, request):
         products = Product.objects.all()
         return render(request, 'products.html', {'products': products})
+
+
+class ProductView(LoginRequiredMixin, View):
+
+    """view to show details of chosen product"""
+
+    def get(self, request, product_id):
+        product = Product.objects.get(id=product_id)
+        return render(request, 'product.html', {'product': product})
+
+
+class RecipientsView(LoginRequiredMixin, View):
+
+    """view to show list of all recipients"""
+
+    def get(self, request):
+        recipients = Recipient.objects.all()
+        return render(request, 'recipients.html', {'recipients': recipients})
 
 
 class WarehouseEntryCreate(PermissionRequiredMixin, CreateView):
@@ -180,11 +198,22 @@ class SupplierUpdate(PermissionRequiredMixin, UpdateView):
 
     """View to update information about chosen supplier"""
 
-    permission_required = ('stocklevel_app.change_supplier')
+    permission_required = 'stocklevel_app.change_supplier'
     model = Supplier
     fields = ['comment', 'category']
     template_name_suffix = '_update_form'
     success_url = '/suppliers/'
+
+
+class ProductUpdate(PermissionRequiredMixin, UpdateView):
+
+    """View to update information about chosen supplier"""
+
+    permission_required = 'stocklevel_app.change_product'
+    model = Product
+    fields = ['production_start', 'production_finish']
+    template_name_suffix = '_update_form'
+    success_url = '/products/'
 
 
 class LoginView(View):

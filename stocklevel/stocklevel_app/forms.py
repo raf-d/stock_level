@@ -2,6 +2,10 @@ import django.forms as forms
 from .models import Component, Recipient, Supplier, Product, WarehouseFlows
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class ComponentForm(forms.ModelForm):
     class Meta:
         model = Component
@@ -29,9 +33,10 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = '__all__'
 
-
-class DateInput(forms.DateInput):
-    input_type = 'date'
+        widgets = {
+            'production_start': DateInput(attrs={'type': 'date'}),
+            'production_finish': DateInput(attrs={'type': 'date'})
+        }
 
 
 class WarehouseEntryForm(forms.ModelForm):

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Szczegóły produktu</h2>
+    <ul>
+        <li>Nazwa: {{ product.name }}</li>
+        <li>Rozpoczęcie produkcji: {{ product.production_start }}</li>
+        <li>Zakończenie produkcji: {{ product.production_finish }}</li>
+        <li>Odbiorca produktu: {{ product.recipient }}</li>
+    </ul>
+    <a href="/update-product/{{ product.id }}/">Edytuj produkt</a>
+
+{% endblock %}
