@@ -1,2 +1,4 @@
 # stock_level
-Controll stock level in your company
+Help to control stock level in your company.
+
+You can add components, suppliers, products, recipients and control stock level in your warehouse.
