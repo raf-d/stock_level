@@ -1,0 +1,49 @@
+<!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        </head>
+        <header>
+            {% if user.is_authenticated %}
+            <div>Użytkownik: {{ user.username }},  <a href="/logout/">Wyloguj</a></div>
+            {% else %}
+            Nie jesteś zalogowany,<a href="/login/"> Zaloguj</a>
+            {% endif %}
+        </header>
+        <body>
+            <h1>Gospodarka magazynowa</h1>
+            {% block content %}{% endblock %}
+        <br><br>
+
+            <ul>Menu:
+                <li><a href="/stock-level/">Stan magazynowy</a></li>
+                <ul>
+                    <li><a href="/all-entries-view/">Szczegółowe zestawienie dostaw</a></li>
+                    <li><a href="/add-warehouse-entry/">Wprowadź nową dostawę materiału</a></li>
+                </ul>
+                <li><a href="/components/">Lista materiałów wyjściowych</a></li>
+                <ul>
+                    <li><a href="/add-component/">Dodaj materiał wyjściowy</a></li>
+                </ul>
+                <li><a href="/suppliers/">Lista dostawców</a></li>
+                <ul>
+                    <li><a href="/add-supplier/">Dodaj dostawcę</a></li>
+                </ul>
+                <li><a href="/products/">Lista produktów</a></li>
+                <ul>
+                    <li><a href="/add-product/">Dodaj produkt</a></li>
+                </ul>
+                <li><a href="/recipients/">Lista odbiorców</a></li>
+                <ul>
+                    <li><a href="/add-recipient/">Dodaj odbiorcę</a></li>
+                </ul>
+
+
+
+            </ul>
+
+
+            <footer>author: raf</footer>
+        </body>
+    </html>

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Aktualny stan magazynowy materiałów wyjściowych:</h2>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Nazwa materiału</th>
+                <th>Ilość</th>
+                <th>Jednostka</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for component in components %}
+            <tr>
+                <td>{{ component.name }}</td>
+                <td>{{ component.stock_level }}</td>
+                <td>{{ component.measure }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

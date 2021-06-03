@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Lista dostawców materiałów wyjściowych</h2>
+    <ul>
+        {% for supp in suppliers %}
+            <li><a href='/supplier/{{ supp.id }}'>{{ supp.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

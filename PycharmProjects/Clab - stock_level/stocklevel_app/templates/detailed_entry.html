@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Aktualny stan magazynowy {{ entry.warehouse_series_number }}:</h2>
+    <br>
+
+    <table>
+        <tbody>
+          <tr>
+            <th>Nr magazynowy</th>
+            <td>{{ entry.warehouse_series_number }}</td>
+          </tr>
+          <tr>
+            <th>Nazwa materiału</th>
+            <td>{{ entry.component }}</td>
+          </tr>
+          <tr>
+            <th>Data dostawy</th>
+            <td>{{ entry.delivery_date }}</td>
+          </tr>
+          <tr>
+            <th>Producent</th>
+            <td>{{ entry.supplier }}</td>
+          </tr>
+          <tr>
+            <th>Nr serii producenta</th>
+            <td>{{ entry.supplier_series_number }}</td>
+          </tr>
+          <tr>
+            <th>Data badań laboratoryjnych</th>
+            <td>{{ entry.laboratory_series_date }}</td>
+          </tr>
+          <tr>
+            <th>Nr po badaniach laboratoryjnych</th>
+            <td>{{ entry.laboratory_series_number }}</td>
+          </tr>
+          <tr>
+            <th>Aktualnie na stanie</th>
+            <td>{{ entry.series_amount }}</td>
+          </tr>
+          <tr>
+            <th>Jednostka</th>
+           <td>{{ entry.component.measure }}</td>
+          </tr>
+          <tr>
+            <th>Termin przydatności</th>
+            <td>{{ entry.use_by_date }}</td>
+          </tr>
+        </tbody>
+    </table>
+    <ul>Opcje:
+        <li><a href="/add-laboratory-number/{{entry.id}}/">Dodaj badania laboratoryjne</a></li>
+        <li><a href="/add-warehouse-release/{{entry.id}}/">Wydaj materiał z magazynu</a></li>
+    </ul>
+
+{% endblock %}

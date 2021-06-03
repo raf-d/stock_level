@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Dostawca materiału wyjściowego</h2>
+    <ul>
+        <li>Nazwa: {{ supplier.name }}</li>
+        <li>Kategoria: {{ supplier.category }}</li>
+        <li>Uwagi: {{ supplier.comment }}</li>
+        <li>Dostarczane materiały:
+            <ul>
+                {% for comp in components %}
+                <li>{{ comp }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    <a href="/update-supplier/{{ supplier.id }}/">Edytuj dostawcę</a>
+
+{% endblock %}
